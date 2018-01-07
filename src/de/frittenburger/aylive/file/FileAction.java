@@ -10,7 +10,6 @@ import de.frittenburger.aylive.mail.Attachment;
 public class FileAction extends Action {
 
 	private String path = null;
-	private boolean deleteOnFinish = false;
 
 	public FileAction to(String path) {
 		if(!new File(path).isDirectory())
@@ -19,14 +18,10 @@ public class FileAction extends Action {
 		return this;
 	}
 	
-	public FileAction deleteOnFinish() {
-		deleteOnFinish = true;
-		return this;
-	}
 	
 	@Override
 	public String toString() {
-		return (deleteOnFinish ? "move" : "copy") + " file to "+path;
+		return "save file to "+path;
 	}
 
 	@Override
@@ -37,9 +32,7 @@ public class FileAction extends Action {
 			File source = (File)obj;
 			File target = new File(path,source.getName());
 			Files.copy(source.toPath(), target.toPath());
-			if(deleteOnFinish)
-				if(!source.delete())
-					source.deleteOnExit();
+			
 			return target;
 		}
 		

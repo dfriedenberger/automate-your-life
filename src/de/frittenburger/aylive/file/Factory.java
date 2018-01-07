@@ -7,13 +7,9 @@ public class Factory {
 		return new FileTrigger();
 	}
 	
-	public static FileAction CopyFile()
+	public static FileAction SaveFile()
 	{
 		return new FileAction();
 	}
 	
-	public static FileAction MoveFile()
-	{
-		return new FileAction().deleteOnFinish();
-	}
 }

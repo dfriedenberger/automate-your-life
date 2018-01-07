@@ -71,7 +71,12 @@ public class Cache {
 	private static Map<String,Cache> cacheMap = new HashMap<String,Cache>();
 	public static synchronized Cache getInstance(String key) {
 		if(!cacheMap.containsKey(key))
-			cacheMap.put(key,new Cache("cache/"+key+".txt"));
+		{
+			File cacheDirectory = new File("cache");
+			if(!cacheDirectory.exists())
+				cacheDirectory.mkdir();
+			cacheMap.put(key,new Cache("cache"+"/"+key+".txt"));
+		}
 		return cacheMap.get(key);
 	}
 

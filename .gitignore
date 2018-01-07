@@ -24,3 +24,11 @@ hs_err_pid*
 
 #Examples with private configuration
 src/examples
+
+#Infrastructure
+cache
+bin
+
+
+
+
