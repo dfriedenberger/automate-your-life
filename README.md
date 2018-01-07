@@ -1,7 +1,7 @@
 # automate-your-life
 Lightweight Open Source Enterprise Service Bus
 
-# Build your Recipes
+# Build your Recipes (Use cases)
 ## Copy downloaded file to archive folder
 ```
 		// Create a basic service object 
@@ -43,4 +43,15 @@ Lightweight Open Source Enterprise Service Bus
 		service.start();
 		service.join();
 ```
+
+# Automate on Windows
+create runnable jar and run it with jawis https://github.com/dfriedenberger/jawis
+
+# Contact
+Dirk Friedenberger, Waldaschaff, Germany
+
+Write me (oder Schreibe mir)
+projekte@frittenburger.de
+
+http://www.frittenburger.de 
 
