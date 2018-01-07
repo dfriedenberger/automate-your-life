@@ -14,8 +14,8 @@ Lightweight Open Source Enterprise Service Bus
 		// Create a recipe which moves bank documents to archive 
 		// when is downloaded  
 		service.addRecipe("Archive bank documents")
-				.When(NewFile().in(downloads).withPattern("DeutscheBank*.pdf"))
-				.Do(MoveFile().to("C:/archive/deutschebank"));
+			.When(NewFile().in(downloads).withPattern("DeutscheBank*.pdf"))
+			.Do(SaveFile().to("C:/archive/deutschebank"));
 		
 		// Start things up! 
 		service.start();
@@ -37,7 +37,7 @@ Lightweight Open Source Enterprise Service Bus
 		service.addRecipe("Archive bill from mail")
 			.When(NewMail().in(mailBox).from("rechnungonline@telekom.de"))
 			.Do(ExtractAttachment().withName("*.pdf"))
-			.Do(CopyFile().to("C:/archive/telekom"));
+			.Do(SaveFile().to("C:/archive/telekom"));
 		
 		// Start things up! 
 		service.start();
