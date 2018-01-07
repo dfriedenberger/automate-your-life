@@ -46,7 +46,7 @@ Lightweight Open Source Enterprise Service Bus
 
 ## Mapping full OpenWeatherMap json response to simple json extract
 ```
-        // Create a basic service object 
+                // Create a basic service object 
 		Service service = new Service();
 
 		// Create a api resource and add to the service.
@@ -58,7 +58,7 @@ Lightweight Open Source Enterprise Service Bus
 
 		service.addResource(openweather);
 		
-		// Create a recipe which mapps the json data
+		// Create a recipe which maps the json data and save to file
 		service.addRecipe("Receive Weatherdata")
 				.When(NewResponse().in(openweather))
 				.Do(Map().mapping(new Mapping<JsonNode, JsonNode>() {
@@ -69,13 +69,16 @@ Lightweight Open Source Enterprise Service Bus
 						ObjectMapper objectMapper = new ObjectMapper();
 						ObjectNode target = objectMapper.createObjectNode();
 						
+						//map city name one to one
 						String name = source.path("name").textValue();
 						target.put("city", name);
-
+						
+						//convert unix time stamp to readable date
 						Date date = new Date(source.path("dt").longValue() * 1000);
 						SimpleDateFormat sdf = new SimpleDateFormat("EEEE dd MMM yyyy", Locale.ENGLISH);
 						target.put("date", sdf.format(date));
 						
+						//append unit to scalar
 						float tempC = source.path("main").path("temp").floatValue();
 						target.put("temp", tempC+" Celsius");
 					
@@ -135,7 +138,7 @@ Lightweight Open Source Enterprise Service Bus
   "cod": 200
 }
 ```
-#### extracted json save to file
+#### extracted json saved to file
 ```
 {
   "city": "Waldaschaff",
