@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.nio.file.Files;
 
 import de.frittenburger.aylive.core.Action;
-import de.frittenburger.aylive.mail.Attachment;
+import de.frittenburger.aylive.core.Content;
 
 public class FileAction extends Action {
 
@@ -36,9 +36,9 @@ public class FileAction extends Action {
 			return target;
 		}
 		
-		if(obj instanceof Attachment)
+		if(obj instanceof Content)
 		{
-			Attachment source = (Attachment)obj;
+			Content source = (Content)obj;
 			File target = new File(path,source.getName());
 			
 			FileOutputStream fos = new FileOutputStream(target);
@@ -48,6 +48,8 @@ public class FileAction extends Action {
 			
 			return target;
 		}
+		
+	
 		
 		
 		throw new UnsupportedOperationException();

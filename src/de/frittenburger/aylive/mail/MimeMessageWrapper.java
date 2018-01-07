@@ -12,12 +12,13 @@ import javax.mail.Multipart;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeMessage;
 
+import de.frittenburger.aylive.core.Content;
 import de.frittenburger.aylive.util.Logger;
 
 public class MimeMessageWrapper {
 	
 	private final Logger logger = new Logger(this.getClass().getSimpleName());
-	private final List<Attachment> attachments = new ArrayList<Attachment>();
+	private final List<Content> contents = new ArrayList<Content>();
 	
 	public MimeMessageWrapper(MimeMessage message) throws  MessagingException, IOException {
 
@@ -26,8 +27,8 @@ public class MimeMessageWrapper {
 			
 	}
 	
-	public List<Attachment> getAttachments() {
-		return attachments;
+	public List<Content> getContents() {
+		return contents;
 	}
 	
 	private void parseContent(Object msgContent, ContentType contentType) throws MessagingException, IOException {
@@ -49,7 +50,12 @@ public class MimeMessageWrapper {
 			
 			if (msgContent instanceof String) {
 				String str = (String) msgContent;	
-			    attachments.add(new Attachment(contentType,str.getBytes()));
+				
+				Content content = new Content(str.getBytes("UTF-8"),"UTF-8");
+				content.setContentType(contentType.getBaseType());
+				content.setName(contentType.getParameter("name"));
+				contents.add(content);
+				
 			} else if (msgContent instanceof InputStream) {
 				// BASE64DecoderStream
 				// QPDecoderStream
@@ -64,7 +70,11 @@ public class MimeMessageWrapper {
 				  buffer.write(data, 0, nRead);
 				}
 				buffer.flush();
-			    attachments.add(new Attachment(contentType,buffer.toByteArray()));
+				
+				Content content = new Content(buffer.toByteArray(),contentType.getParameter("encoding"));
+				content.setContentType(contentType.getBaseType());
+				content.setName(contentType.getParameter("name"));
+				contents.add(content);
 				
 			} else {
 				throw new RuntimeException("Not implemented " + msgContent);

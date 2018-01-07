@@ -3,6 +3,7 @@ package de.frittenburger.aylive.mail;
 import javax.mail.internet.MimeMessage;
 
 import de.frittenburger.aylive.core.Action;
+import de.frittenburger.aylive.core.Content;
 
 public class MailAction extends Action {
 
@@ -21,12 +22,12 @@ public class MailAction extends Action {
 			MimeMessage source = (MimeMessage)obj;
 			MimeMessageWrapper wrapper = new MimeMessageWrapper(source);
 
-			for(Attachment attachment : wrapper.getAttachments())
+			for(Content content : wrapper.getContents())
 			{
-				String name = attachment.getName();
+				String name = content.getName();
 				if(name == null) continue;
 				if(name.matches(nameRegex))
-					return attachment;
+					return content;
 			}
 			
 			return null;
