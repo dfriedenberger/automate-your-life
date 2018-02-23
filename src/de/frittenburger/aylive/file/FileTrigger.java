@@ -5,18 +5,20 @@ import de.frittenburger.aylive.core.Trigger;
 
 public class FileTrigger extends Trigger {
 
-	private String path = null;
 	private String regex = null;
-	
-	public FileTrigger in(Directory ayltest)  {
-		ayltest.addListener(this);
+	private String path = null;
+
+	public FileTrigger in(Directory directory)  {
+		directory.addListener(this);
+		path = directory.getPath();
 		return this;
 	}
 
-	public Trigger withPattern(String pattern) {
+	public FileTrigger withPattern(String pattern) {
 		regex = "^" + pattern.replaceAll("[.]", "[.]").replaceAll("[?]", ".").replaceAll("[*]",".*") + "$";
 		return this;
 	}
+
 
 	@Override
 	public boolean match(Object obj) throws Exception {

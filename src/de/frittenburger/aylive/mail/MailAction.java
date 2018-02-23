@@ -8,12 +8,18 @@ import de.frittenburger.aylive.core.Content;
 public class MailAction extends Action {
 
 	private String nameRegex = null;
+	private String contentType = null;
 
-	public Action withName(String pattern) {
+	public MailAction withName(String pattern) {
 		nameRegex = "^" + pattern.replaceAll("[.]", "[.]").replaceAll("[?]", ".").replaceAll("[*]",".*") + "$";
 		return this;
 	}
 	
+	public MailAction withContentType(String contentType) {
+		this.contentType = contentType;
+		return this;
+	}
+
 	
 	@Override
 	public Object excecute(Object obj) throws Exception {
@@ -25,9 +31,15 @@ public class MailAction extends Action {
 			for(Content content : wrapper.getContents())
 			{
 				String name = content.getName();
-				if(name == null) continue;
-				if(name.matches(nameRegex))
-					return content;
+				if(name != null && nameRegex != null)
+					if(name.matches(nameRegex))
+						return content;
+				String type = content.getContentType();
+				if(type != null && contentType != null)
+				{
+					if(type.equals(contentType)) 
+						return content;
+				}
 			}
 			
 			return null;
@@ -41,6 +53,8 @@ public class MailAction extends Action {
 		return "extract attachment";
 	}
 
+
+	
 	
 	
 

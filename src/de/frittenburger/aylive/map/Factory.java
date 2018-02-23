@@ -2,9 +2,9 @@ package de.frittenburger.aylive.map;
 
 
 public class Factory {
-	public static JsonAction Map()
+	public static MapAction Map()
 	{
-		return new JsonAction();
+		return new MapAction();
 	}
 	
 }

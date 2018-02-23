@@ -36,5 +36,10 @@ public class Content {
 	public byte[] getData() {
 		return data;
 	}
+
+	@Override
+	public String toString() {
+		return "Content [contentType=" + contentType + ", name=" + name + ", len=" + data.length+"]";
+	}
 	
 }

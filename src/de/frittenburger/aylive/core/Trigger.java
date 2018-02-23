@@ -16,5 +16,7 @@ public abstract class Trigger {
 	
 	public abstract boolean match(Object obj) throws Exception;
 
+	
+
 
 }
