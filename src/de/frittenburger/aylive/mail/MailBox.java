@@ -32,6 +32,7 @@ public class MailBox extends Resource {
 	private final Logger logger = new Logger(this.getClass().getSimpleName());
 	private long cycleMin = 1;
 	private long last = 0;
+	private int cntMessages = 0;
 	
 	public MailBox(String provider,String mailserver) {
 		this.provider = provider;
@@ -62,20 +63,25 @@ public class MailBox extends Resource {
 	}
 	
 	private void close() {
-			
+
+		if (inbox != null)
 			try {
-				if(inbox != null)
+				if(inbox.isOpen())
 					inbox.close(false);
-				if(store != null)
-					store.close();
 			} catch (MessagingException e) {
 				e.printStackTrace();
-			} finally {
-				store = null;
-			}	
-			
-		}
+			}
+		inbox = null;
 
+		if (store != null)
+			try {
+				store.close();
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+		store = null;
+
+	}
 
 	@Override
 	public Event poll() throws Exception 
@@ -84,7 +90,6 @@ public class MailBox extends Resource {
 		if((new Date().getTime() - last) < (cycleMin * 60 * 1000)) return null;
 		
 		
-		logger.info("read messages");
 		try
 		{
 		
@@ -96,6 +101,9 @@ public class MailBox extends Resource {
 				return event;
 			
 			last  = new Date().getTime();
+			if(cntMessages > 0)
+				logger.info("read "+cntMessages+" messages");
+			cntMessages = 0;
 		}
 		finally {
 			close();
@@ -121,7 +129,7 @@ public class MailBox extends Resource {
 		
 		if(s == e)
 		{
-			logger.infoFormat("Read Message %d",s);
+			cntMessages++;
 			//add to cache
 			cache.add(ids);
 			

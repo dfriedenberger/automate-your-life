@@ -9,7 +9,6 @@ import java.util.List;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeMessage;
 
 import de.frittenburger.aylive.core.Content;
@@ -20,10 +19,11 @@ public class MimeMessageWrapper {
 	private final Logger logger = new Logger(this.getClass().getSimpleName());
 	private final List<Content> contents = new ArrayList<Content>();
 	
+	@SuppressWarnings("unchecked")
 	public MimeMessageWrapper(MimeMessage message) throws  MessagingException, IOException {
 
 		//parse
-		parseContent(message.getContent(),new ContentType(message.getContentType()));
+		parseContent(message.getContent(),new HeaderWrapper(message.getAllHeaders()));
 			
 	}
 	
@@ -31,10 +31,11 @@ public class MimeMessageWrapper {
 		return contents;
 	}
 	
-	private void parseContent(Object msgContent, ContentType contentType) throws MessagingException, IOException {
+	@SuppressWarnings("unchecked")
+	private void parseContent(Object msgContent,HeaderWrapper headerWrapper) throws MessagingException, IOException {
 
 		
-		logger.info(contentType);
+		logger.info(headerWrapper);
 		
 		if (msgContent instanceof Multipart) {
 			Multipart multipart = (Multipart) msgContent;
@@ -42,7 +43,7 @@ public class MimeMessageWrapper {
 			for (int j = 0; j < multipart.getCount(); j++) {
 
 				BodyPart bodyPart = multipart.getBodyPart(j);
-				parseContent(bodyPart.getContent(),new ContentType(bodyPart.getContentType()));
+				parseContent(bodyPart.getContent(),new HeaderWrapper(bodyPart.getAllHeaders()));
 			}
 			
 
@@ -52,8 +53,8 @@ public class MimeMessageWrapper {
 				String str = (String) msgContent;	
 				
 				Content content = new Content(str.getBytes("UTF-8"),"UTF-8");
-				content.setContentType(contentType.getBaseType());
-				content.setName(contentType.getParameter("name"));
+				content.setContentType(headerWrapper.getContentType());
+				content.setName(headerWrapper.getName());
 				contents.add(content);
 				
 			} else if (msgContent instanceof InputStream) {
@@ -71,9 +72,9 @@ public class MimeMessageWrapper {
 				}
 				buffer.flush();
 				
-				Content content = new Content(buffer.toByteArray(),contentType.getParameter("encoding"));
-				content.setContentType(contentType.getBaseType());
-				content.setName(contentType.getParameter("name"));
+				Content content = new Content(buffer.toByteArray(),headerWrapper.getEncoding());
+				content.setContentType(headerWrapper.getContentType());
+				content.setName(headerWrapper.getName());
 				contents.add(content);
 				
 			} else {
