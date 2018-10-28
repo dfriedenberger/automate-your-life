@@ -4,9 +4,11 @@ import javax.mail.internet.MimeMessage;
 
 import de.frittenburger.aylive.core.Action;
 import de.frittenburger.aylive.core.Content;
+import de.frittenburger.aylive.util.Logger;
 
 public class MailAction extends Action {
 
+	private final Logger logger = new Logger(this.getClass().getSimpleName());
 	private String nameRegex = null;
 	private String contentType = null;
 
@@ -41,7 +43,7 @@ public class MailAction extends Action {
 						return content;
 				}
 			}
-			
+			logger.error("No Content matched contentType="+contentType+" nameRegex="+nameRegex);
 			return null;
 		}
 		

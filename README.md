@@ -2,6 +2,51 @@
 Lightweight Open Source Enterprise Service Bus
 
 # Build your Recipes (Use cases)
+## Build your recipes with yaml
+```
+
+
+resources:
+   - mail: $email
+     server:
+          protocol: pop3
+          ssl: false
+          host: pop3.server.de
+          port: 110
+     credentials:
+          user: username
+          pass: password
+     cycle: 10
+
+   - folder: $downloads
+     path: C:\Users\Name\Downloads
+
+recipes:
+   - recipe: Telekommrechnungen
+     when:
+          event:  newmail
+          in: $email
+          from:   rechnungonline@telekom.de
+     then:
+     - do:
+          action: extractattachment
+          withName: '*.pdf'
+     - do:
+          action: savefile
+          target: 'C:/Temp/automate-your-life/arch'
+          
+  
+   - recipe: Archive bank documents from download
+     when:
+          event: newfile
+          in: $downloads
+          withName: '*_1234567890_*.pdf'
+     then:
+     - do: 
+          action: savefile
+          target: 'C:/Temp/automate-your-life/arch'
+```
+
 ## Copy downloaded file to archive folder
 ```
 		// Create a basic service object 
@@ -14,7 +59,7 @@ Lightweight Open Source Enterprise Service Bus
 		// Create a recipe which moves bank documents to archive 
 		// when is downloaded  
 		service.addRecipe("Archive bank documents")
-			.When(NewFile().in(downloads).withPattern("DeutscheBank*.pdf"))
+			.When(NewFile().in(downloads).withName("DeutscheBank*.pdf"))
 			.Do(SaveFile().to("C:/archive/deutschebank"));
 		
 		// Start things up! 
@@ -28,7 +73,8 @@ Lightweight Open Source Enterprise Service Bus
 		Service service = new Service();
 
 		// Create a mailbox resource and add to the service.
-		MailBox mailBox = new MailBox("pop3","pop.gmx.net");
+		MailBox mailBox = new MailBox();
+		mailBox.setProvider("pop3","pop3.gmx.net");
 		mailBox.setCredentials("username","password");
 		mailBox.setCylce(10);
 		service.addResource(mailBox);
@@ -46,7 +92,7 @@ Lightweight Open Source Enterprise Service Bus
 
 ## Mapping full OpenWeatherMap json response to simple json extract
 ```
-                // Create a basic service object 
+    // Create a basic service object 
 		Service service = new Service();
 
 		// Create a api resource and add to the service.

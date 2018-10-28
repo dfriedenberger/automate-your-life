@@ -32,7 +32,7 @@ public class Directory extends Resource {
 	public Directory(String path) throws IOException {
 
 		if(!new File(path).isDirectory())
-			throw new IllegalArgumentException();
+			throw new IOException(path+ " is not a directory");
 		this.path = path;
 		
 	}

@@ -22,7 +22,7 @@
 hs_err_pid*
 
 #Examples with private configuration
-src/examples
+src/main/java/examples
 
 #Infrastructure
 cache

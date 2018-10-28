@@ -22,8 +22,8 @@ public class MailBox extends Resource {
 	private Store store = null;
 	private Folder inbox = null;
 
-	private final String provider;
-	private final String mailserver;
+	private String provider = null;
+	private String mailserver = null;
 	private String username = null;
 	private String password = null;
 	
@@ -34,7 +34,9 @@ public class MailBox extends Resource {
 	private long last = 0;
 	private int cntMessages = 0;
 	
-	public MailBox(String provider,String mailserver) {
+
+	
+	public void setProvider(String provider, String mailserver) {
 		this.provider = provider;
 		this.mailserver = mailserver;
 	}

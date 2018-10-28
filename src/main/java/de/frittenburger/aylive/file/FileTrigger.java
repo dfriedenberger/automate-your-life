@@ -14,7 +14,7 @@ public class FileTrigger extends Trigger {
 		return this;
 	}
 
-	public FileTrigger withPattern(String pattern) {
+	public FileTrigger withName(String pattern) {
 		regex = "^" + pattern.replaceAll("[.]", "[.]").replaceAll("[?]", ".").replaceAll("[*]",".*") + "$";
 		return this;
 	}
@@ -27,7 +27,6 @@ public class FileTrigger extends Trigger {
 		if(obj instanceof File)
 		{
 			String filename = ((File)obj).getName();
-		
 			return filename.matches(regex);
 		}
 		
