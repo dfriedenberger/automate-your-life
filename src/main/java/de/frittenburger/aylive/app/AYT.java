@@ -17,7 +17,7 @@ public class AYT {
 		{
 			if(!new File(args[i]).isFile())
 			{
-				System.out.println("Unknonw argument "+args[i]);
+				System.out.println("Unknown argument "+args[i]);
 				continue;
 			}
 			reader.init(args[i]);

@@ -55,9 +55,10 @@ public class FileAction extends Action {
 
 			File target = new File(path,name);
 			
-			FileOutputStream fos = new FileOutputStream(target);
-			fos.write(source.getData());
-			fos.close();
+			try(FileOutputStream fos = new FileOutputStream(target))
+			{
+				fos.write(source.getData());
+			}
 				
 			
 			return target;

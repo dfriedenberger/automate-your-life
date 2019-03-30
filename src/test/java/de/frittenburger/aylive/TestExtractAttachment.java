@@ -2,13 +2,10 @@ package de.frittenburger.aylive;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 
