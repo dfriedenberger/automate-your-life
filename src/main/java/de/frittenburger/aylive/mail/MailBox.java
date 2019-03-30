@@ -22,8 +22,10 @@ public class MailBox extends Resource {
 	private Store store = null;
 	private Folder inbox = null;
 
-	private String provider = null;
+	private MailProtocol protocol = null;
 	private String mailserver = null;
+	private int port = 995;
+	private boolean ssl = true;
 	private String username = null;
 	private String password = null;
 	
@@ -33,12 +35,15 @@ public class MailBox extends Resource {
 	private long cycleMin = 1;
 	private long last = 0;
 	private int cntMessages = 0;
+
 	
 
 	
-	public void setProvider(String provider, String mailserver) {
-		this.provider = provider;
+	public void setProvider(MailProtocol protocol, String mailserver, int port, boolean ssl) {
+		this.protocol = protocol;
 		this.mailserver = mailserver;
+		this.port = port;
+		this.ssl = ssl;
 	}
 
 	public void setCredentials(String username, String password) {
@@ -53,11 +58,20 @@ public class MailBox extends Resource {
 	private void open(String folder) throws MessagingException {
 		
 		Properties props = new Properties();
-		Session session = Session.getDefaultInstance(props, null);
-		
-		store = session.getStore(provider);
-		store.connect(mailserver, username, password);
-		
+		final Session session;
+		if(ssl)
+		{
+			String prefix = "mail."+protocol;
+			props.setProperty(prefix+".socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			props.setProperty(prefix+".socketFactory.fallback", "false");
+			session = Session.getInstance(props);
+		}
+		else
+		{
+			session = Session.getDefaultInstance(props, null);
+		}
+		store = session.getStore(protocol.toString());
+		store.connect(mailserver, port, username, password);
 		inbox = store.getFolder(folder);
 
 		inbox.open(Folder.READ_ONLY);

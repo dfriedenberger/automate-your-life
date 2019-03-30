@@ -26,9 +26,12 @@ public class Factory {
         	
         	if(key.equals("server"))
         	{
-        	   String protocol = node.get("protocol").asText();
+        	   MailProtocol protocol = MailProtocol.valueOf(node.get("protocol").asText().trim().toUpperCase());
         	   String host = node.get("host").asText();
-        	   mailbox.setProvider(protocol,host);
+        	   int port = node.get("port").asInt();
+        	   boolean ssl = node.get("ssl").asBoolean();
+        	   
+        	   mailbox.setProvider(protocol,host,port,ssl);
         	   continue;
         	}
         	        	
