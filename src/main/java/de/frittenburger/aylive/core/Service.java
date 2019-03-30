@@ -3,13 +3,15 @@ package de.frittenburger.aylive.core;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.frittenburger.aylive.util.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class Service extends Thread {
 
-	private final List<Recipe> recipes = new ArrayList<Recipe>();
-	private final Logger logger = new Logger(this.getClass().getSimpleName());
-	private final List<Resource> resources = new ArrayList<Resource>();
+	private final List<Recipe> recipes = new ArrayList<>();
+    private static final Logger logger = LogManager.getLogger(Service.class);
+	private final List<Resource> resources = new ArrayList<>();
 	
 	
 	public Recipe addRecipe(String name) {
@@ -25,12 +27,12 @@ public class Service extends Thread {
 		resources.add(resource);
 	}
 	
-
+	@Override
 	public void run() {
 		
 		//dump
 		for(Recipe recipe : recipes)
-			logger.infoFormat("%s", recipe);
+			logger.info("{}", recipe);
 		
 		while(true)
 		{
@@ -44,7 +46,7 @@ public class Service extends Thread {
 					for(Recipe recipe :  event.getRecipes())
 					{
 						Object obj = event.getObject();
-						logger.infoFormat("Excecute %s with %s", recipe,obj);
+						logger.info("Excecute {} with {}", recipe,obj);
 
 						for(Action action : recipe.getActionPipe())
 						{
@@ -55,14 +57,15 @@ public class Service extends Thread {
 					}
 					
 				} catch (Exception e) {
-						logger.error(e);
-						e.printStackTrace();
+					logger.error(e);
 				}
 			
 			try {
 				sleep(100);
 			} catch (InterruptedException e) {
 				logger.error(e);
+				// Restore interrupted state...
+			    Thread.currentThread().interrupt();
 			}
 		}
 		

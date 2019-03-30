@@ -9,18 +9,21 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.frittenburger.aylive.core.Content;
 import de.frittenburger.aylive.core.Event;
 import de.frittenburger.aylive.core.Recipe;
 import de.frittenburger.aylive.core.Resource;
-import de.frittenburger.aylive.util.Logger;
+import de.frittenburger.aylive.core.Service;
 
 public class WebApi extends Resource {
 
 	private String url;
 	private long cycleMin = 1;
 	private long last = 0;
-	private final Logger logger = new Logger(this.getClass().getSimpleName());
+    private static final Logger logger = LogManager.getLogger(Service.class);
 
 	public WebApi(String url) {
 		this.url = url;
@@ -42,7 +45,7 @@ public class WebApi extends Resource {
 		last = new Date().getTime();
 		
 		URL obj = new URL(url);
-		logger.infoFormat("Sending 'GET' request to URL %s",url);
+		logger.info("Sending 'GET' request to URL {}",url);
 
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
@@ -53,10 +56,10 @@ public class WebApi extends Resource {
 		//con.setRequestProperty("User-Agent", USER_AGENT);
 
 		int responseCode = con.getResponseCode();
-		logger.infoFormat("Response Code : %d",responseCode);	
+		logger.info("Response Code : {}",responseCode);	
 		
 		String contentType = con.getHeaderFields().get("Content-Type").get(0);
-		logger.infoFormat("contentType = %s",contentType);
+		logger.info("contentType ={}",contentType);
 
 		
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));

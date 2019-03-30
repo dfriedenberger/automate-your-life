@@ -14,19 +14,21 @@ import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.frittenburger.aylive.core.Content;
 import de.frittenburger.aylive.core.Event;
 import de.frittenburger.aylive.core.Recipe;
 import de.frittenburger.aylive.core.Resource;
 import de.frittenburger.aylive.util.Cache;
-import de.frittenburger.aylive.util.Logger;
 
 public class Directory extends Resource {
 
 	private WatchService watchService = null;
 	private String path = null;
 	private static Cache cache = Cache.getInstance("file");
-	private final Logger logger = new Logger(this.getClass().getSimpleName());
+    private static final Logger logger = LogManager.getLogger(Directory.class);
 	private final List<FileState> fileQueue = new ArrayList<FileState>();
 	
 	public Directory(String path) throws IOException {
@@ -41,7 +43,7 @@ public class Directory extends Resource {
 	}
 	private void scanFolder() {
 		
-		logger.infoFormat("Scan Folder %s", path);
+		logger.info("Scan Folder {}", path);
 		for (String filename : new File(path).list()) {
 			File file = new File(path, filename);
 			if (cache.exists(file.getAbsolutePath()))

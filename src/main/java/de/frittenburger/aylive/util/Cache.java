@@ -14,7 +14,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 public class Cache {
+	
+    private static final Logger logger = LogManager.getLogger(Cache.class);
 
 	private final Set<String> set = new HashSet<String>();
 	private final File file;
@@ -33,13 +39,13 @@ public class Cache {
 			     set.add(readLine.trim());
 			 }
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e);
 		} finally {
 			if(in != null)
 				try {
 					in.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					logger.error(e);
 				}
 		}
 	}
@@ -60,7 +66,7 @@ public class Cache {
 				out = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
 				out.println(id);
 		} catch (IOException e) {
-				e.printStackTrace();
+			logger.error(e);
 		} finally {
 			if(out != null)
 				out.close();

@@ -11,12 +11,14 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.frittenburger.aylive.core.Content;
-import de.frittenburger.aylive.util.Logger;
 
 public class MimeMessageWrapper {
 	
-	private final Logger logger = new Logger(this.getClass().getSimpleName());
+    private static final Logger logger = LogManager.getLogger(MimeMessageWrapper.class);
 	private final List<Content> contents = new ArrayList<Content>();
 	
 	@SuppressWarnings("unchecked")

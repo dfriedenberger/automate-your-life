@@ -2,10 +2,15 @@ package de.frittenburger.aylive.app;
 
 import java.io.File;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.frittenburger.aylive.core.Service;
 import de.frittenburger.aylive.util.ConfigReader;
 
 public class AYT {
+
+    private static final Logger logger = LogManager.getLogger(AYT.class);
 
 	public static void main(String[] args) throws InterruptedException {
 
@@ -17,7 +22,7 @@ public class AYT {
 		{
 			if(!new File(args[i]).isFile())
 			{
-				System.out.println("Unknown argument "+args[i]);
+				logger.warn("Unknown argument {}",args[i]);
 				continue;
 			}
 			reader.init(args[i]);

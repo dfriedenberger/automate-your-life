@@ -11,11 +11,13 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import de.frittenburger.aylive.core.Event;
 import de.frittenburger.aylive.core.Recipe;
 import de.frittenburger.aylive.core.Resource;
 import de.frittenburger.aylive.util.Cache;
-import de.frittenburger.aylive.util.Logger;
 
 public class MailBox extends Resource {
 
@@ -31,7 +33,7 @@ public class MailBox extends Resource {
 	
 	
 	private static Cache cache = Cache.getInstance("mail");
-	private final Logger logger = new Logger(this.getClass().getSimpleName());
+    private static final Logger logger = LogManager.getLogger(MailAction.class);
 	private long cycleMin = 1;
 	private long last = 0;
 	private int cntMessages = 0;
@@ -85,7 +87,7 @@ public class MailBox extends Resource {
 				if(inbox.isOpen())
 					inbox.close(false);
 			} catch (MessagingException e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		inbox = null;
 
@@ -93,7 +95,7 @@ public class MailBox extends Resource {
 			try {
 				store.close();
 			} catch (MessagingException e) {
-				e.printStackTrace();
+				logger.error(e);
 			}
 		store = null;
 

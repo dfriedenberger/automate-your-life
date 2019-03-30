@@ -9,6 +9,9 @@ import java.util.Map.Entry;
 
 import javax.mail.internet.AddressException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -26,7 +29,9 @@ import static de.frittenburger.aylive.file.Factory.*;
 
 public class ConfigReader {
 
-	private final Map<String,Resource> resources = new HashMap<String,Resource>();
+    private static final Logger logger = LogManager.getLogger(Service.class);
+
+	private final Map<String,Resource> resources = new HashMap<>();
 	private final Service service;
 
 	public ConfigReader(Service service)
@@ -50,7 +55,7 @@ public class ConfigReader {
 	            	{
 		            	ObjectNode o = (ObjectNode)n;
 		            	handle(key,o);
-			            System.out.println(o);
+		            	logger.info("{}",o);
 	            	}
 	            	if(n instanceof ArrayNode)
 	            	{
@@ -64,7 +69,7 @@ public class ConfigReader {
 
 	            }
 	        } catch (Exception e) {
-	            e.printStackTrace();
+	        	logger.error(e);
 	        }		
 	}
 
@@ -79,7 +84,7 @@ public class ConfigReader {
 			handleRecipe(o);
 			break;
 		default:
-			System.err.println("unknown key "+key);
+        	logger.error("unknown key {}",key);
 			break;
 		}
 	}
@@ -203,7 +208,7 @@ public class ConfigReader {
 	    		try {
 					return NewMail(elements,resources);
 				} catch (AddressException e1) {
-					e1.printStackTrace();
+					logger.error(e1);
 					throw new IOException(e1.getMessage());
 				}
 	    	}
