@@ -25,6 +25,8 @@ import de.frittenburger.aylive.util.Cache;
 
 public class Directory extends Resource {
 
+	
+
 	private WatchService watchService = null;
 	private String path = null;
 	private static Cache cache = Cache.getInstance("file");
@@ -87,7 +89,8 @@ public class Directory extends Resource {
 			//remove from queue and add to cache
 			fileQueue.remove(i);
 			cache.add(file.getAbsolutePath());
-			
+			logger.debug("File {}", file.getAbsolutePath());
+
 			List<Recipe> recipes = match(file);
 
 			if (recipes != null)
@@ -98,16 +101,20 @@ public class Directory extends Resource {
 				Content content = new Content(b,"UTF-8");
 				content.setContentType(ct);
 				content.setName(file.getName());
+				
 				return new Event(content,recipes);
-				//return new Event(file,recipes);
 			}
+
 		}
 
 		return null;
 	}
 
 	
-
+	@Override
+	public String toString() {
+		return "Directory [path=" + path + "]";
+	}
 	
 
 	

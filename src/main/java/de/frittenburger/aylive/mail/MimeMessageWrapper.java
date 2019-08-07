@@ -37,7 +37,7 @@ public class MimeMessageWrapper {
 	private void parseContent(Object msgContent,HeaderWrapper headerWrapper) throws MessagingException, IOException {
 
 		
-		logger.info(headerWrapper);
+		logger.debug(headerWrapper);
 		
 		if (msgContent instanceof Multipart) {
 			Multipart multipart = (Multipart) msgContent;

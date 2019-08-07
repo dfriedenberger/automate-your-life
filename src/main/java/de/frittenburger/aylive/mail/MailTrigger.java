@@ -1,6 +1,9 @@
 package de.frittenburger.aylive.mail;
 
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.mail.Address;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -10,13 +13,22 @@ import de.frittenburger.aylive.core.Trigger;
 
 public class MailTrigger extends Trigger {
 
-	private String fromAddress = null;
+	private List<String> fromAddresses = null;
 	
-	public MailTrigger from(String address) throws AddressException {
-		new InternetAddress(address).validate();
-		fromAddress = address;
+	public MailTrigger from(List<String> list) throws AddressException {
+		
+		fromAddresses = list;
+		for(String adress : fromAddresses)
+			new InternetAddress(adress).validate();
+
 		return this;
 	}
+	
+	public MailTrigger from(String adress) throws AddressException {
+		return from(Arrays.asList(adress));
+	}
+
+	
 	
 	public MailTrigger in(MailBox mailBox) {
 		mailBox.addListener(this);
@@ -26,7 +38,7 @@ public class MailTrigger extends Trigger {
 	
 	@Override
 	public String toString() {
-		return "new mail from "+fromAddress;
+		return "new mail from "+fromAddresses;
 	}
 
 	@Override
@@ -35,22 +47,23 @@ public class MailTrigger extends Trigger {
 		if(obj instanceof MimeMessage)
 		{
 			MimeMessage msg = (MimeMessage)obj;
-			if (fromAddress != null) {
+			
+			if (fromAddresses == null) return true; //match every time
 				
-				Address[] address = msg.getFrom();
-				if (address.length != 1)
-					throw new ArrayIndexOutOfBoundsException();
-				
-				InternetAddress emailAddr = (InternetAddress) address[0];
-				emailAddr.validate();
-				if (!fromAddress.equals(emailAddr.getAddress())) return false;
-			}
-			return true;
+			Address[] address = msg.getFrom();
+			if (address.length != 1)
+				throw new ArrayIndexOutOfBoundsException();
+			
+			InternetAddress emailAddr = (InternetAddress) address[0];
+			emailAddr.validate();
+			
+			for(String fromAddress : fromAddresses)
+				if (fromAddress.equals(emailAddr.getAddress())) return true;
 			
 		}		
-		
 		return false;
 	}
+
 
 	
 

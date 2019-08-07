@@ -32,7 +32,11 @@ public class Service extends Thread {
 		
 		//dump
 		for(Recipe recipe : recipes)
-			logger.info("{}", recipe);
+			logger.info("Recipe {}", recipe);
+		
+		for(Resource resource : resources)
+			logger.info("Resource {}", resource);
+
 		
 		while(true)
 		{
@@ -40,9 +44,12 @@ public class Service extends Thread {
 			//poll resources
 			for(Resource resource : resources)
 				try {
+					logger.trace("Poll {}", resource);
+
 					Event event = resource.poll();
 					if(event == null) continue;
 					
+
 					for(Recipe recipe :  event.getRecipes())
 					{
 						Object obj = event.getObject();
@@ -50,8 +57,24 @@ public class Service extends Thread {
 
 						for(Action action : recipe.getActionPipe())
 						{
-							obj = action.excecute(obj);
-							if(obj == null) break;
+							
+							if(obj instanceof Collection)
+							{
+								Collection results = new Collection();
+								for(Object cobj : (Collection)obj)
+								{
+									cobj = action.excecute(cobj);
+									if(cobj == null) continue;
+									results.add(cobj);
+								}
+								if(results.size() == 0) break;
+								obj = results.size() == 1?results.get(0):results;
+							}
+							else
+							{
+								obj = action.excecute(obj);
+								if(obj == null) break;
+							}
 						}	
 						
 					}

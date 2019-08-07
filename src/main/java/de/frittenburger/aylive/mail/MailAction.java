@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import de.frittenburger.aylive.core.Action;
+import de.frittenburger.aylive.core.Collection;
 import de.frittenburger.aylive.core.Content;
 
 public class MailAction extends Action {
@@ -32,21 +33,40 @@ public class MailAction extends Action {
 			MimeMessage source = (MimeMessage)obj;
 			MimeMessageWrapper wrapper = new MimeMessageWrapper(source);
 
+			Collection collection = new Collection();
+			
 			for(Content content : wrapper.getContents())
 			{
 				String name = content.getName();
 				if(name != null && nameRegex != null)
 					if(name.matches(nameRegex))
-						return content;
+					{
+						collection.add(content);
+						continue;
+					}
 				String type = content.getContentType();
 				if(type != null && contentType != null)
 				{
 					if(type.equals(contentType)) 
-						return content;
+					{
+						collection.add(content);
+						continue;
+					}
 				}
 			}
-			logger.error("No Content matched contentType={} nameRegex={}",contentType,nameRegex);
-			return null;
+			
+			switch(collection.size())
+			{
+				case 0:
+					logger.error("No Content matched contentType={} nameRegex={} subject={}exit"
+						+ "",contentType,nameRegex,source.getSubject());
+
+					return null;
+				case 1: //Single Content
+					return collection.get(0);
+				default:
+					return collection;
+			}
 		}
 		
 		throw new UnsupportedOperationException();

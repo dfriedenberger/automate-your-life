@@ -40,6 +40,7 @@ public class ConfigReader {
 	}
 	
 	public void init(String filename) {
+		 logger.info("read {}",filename);
 		 ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 	        try {
 	            JsonNode node = mapper.readTree(new File(filename));

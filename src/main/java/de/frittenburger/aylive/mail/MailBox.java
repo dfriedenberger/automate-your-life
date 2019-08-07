@@ -9,6 +9,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.apache.logging.log4j.LogManager;
@@ -118,10 +119,25 @@ public class MailBox extends Resource {
 			if(event != null) 
 				return event;
 			
-			last  = new Date().getTime();
 			if(cntMessages > 0)
 				logger.info("read "+cntMessages+" messages");
+			else
+				last  = new Date().getTime();
 			cntMessages = 0;
+		}
+		catch(MessagingException e)
+		{
+			Exception nested = e.getNextException();
+			if(nested instanceof java.net.ConnectException)
+			{
+				logger.error("ConnectException "+nested.getMessage());
+			}
+			else if(nested instanceof java.net.UnknownHostException)
+			{
+				logger.error("UnknownHostException "+nested.getMessage());
+			}
+			
+			logger.error(e);
 		}
 		finally {
 			close();
@@ -148,13 +164,17 @@ public class MailBox extends Resource {
 		if(s == e)
 		{
 			cntMessages++;
+			
 			//add to cache
 			cache.add(ids);
-			
+			logger.debug("mail from={}",((InternetAddress)mimeS.getFrom()[0]).getAddress());
 			List<Recipe> recipes = match(mimeS);
 
+			
 			if (recipes != null)
+			{
 				return new Event(new MimeMessage(mimeS),recipes);
+			}
 			return null;
 		}
 		
@@ -166,6 +186,11 @@ public class MailBox extends Resource {
 			ev = getUnread(messages,m+1,e);
 		
 		return ev;
+	}
+
+	@Override
+	public String toString() {
+		return "MailBox [mailserver=" + mailserver + ", port=" + port + ", ssl=" + ssl + ", username=" + username + "]";
 	}
 
 	

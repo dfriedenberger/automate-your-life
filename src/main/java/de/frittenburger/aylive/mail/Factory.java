@@ -1,7 +1,9 @@
 package de.frittenburger.aylive.mail;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -80,7 +82,7 @@ public class Factory {
         	}
         	if(key.equals("from"))
         	{
-        		trigger.from(node.asText());
+        		trigger.from(getValues(node));
         		continue;
         	}
      
@@ -89,6 +91,27 @@ public class Factory {
 		return trigger;
 	}
 	
+	private static List<String> getValues(JsonNode node) {
+
+		
+		List<String> values = new ArrayList<>();
+		if (node.isArray())
+	    {
+			Iterator<JsonNode> elements = node.elements();
+			while(elements.hasNext())
+			{
+				JsonNode n = elements.next();
+				values.add(n.asText());
+			}
+	    }
+		else
+		{
+			values.add(node.asText());
+		}
+		return values;
+	}
+
+
 	public static MailAction ExtractAttachment()
 	{
 		return new MailAction();

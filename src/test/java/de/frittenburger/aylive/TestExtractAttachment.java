@@ -1,6 +1,8 @@
 package de.frittenburger.aylive;
 
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 import java.util.List;
@@ -9,16 +11,16 @@ import java.util.Properties;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import de.frittenburger.aylive.core.Content;
 import de.frittenburger.aylive.mail.MailAction;
 import de.frittenburger.aylive.mail.MimeMessageWrapper;
 
-class TestExtractAttachment {
+public class TestExtractAttachment {
 
 	@Test
-	void testMimeMessageWrapper() throws Exception
+	public void testMimeMessageWrapper() throws Exception
 	{
 		InputStream mailFileInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("textmail.eml");	
 		Properties props = new Properties();
@@ -36,7 +38,7 @@ class TestExtractAttachment {
 	
 	
 	@Test
-	void testMailAction() throws Exception {
+	public void testMailAction() throws Exception {
 		
 		
 		InputStream mailFileInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("textmail.eml");	

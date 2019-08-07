@@ -14,6 +14,8 @@ public class Recipe {
 		this.description = description;
 	}
 
+
+	
 	public Recipe When(Trigger trigger) {
 		trigger.setRecipe(this);
 		this.trigger = trigger;
@@ -29,6 +31,11 @@ public class Recipe {
 		return actionPipe;
 	}
 	
+	
+	public String getDescription() {
+		return description;
+	}
+	
 	@Override
 	public String toString() {
 		
@@ -40,6 +47,8 @@ public class Recipe {
 		return str;
 		
 	}
+
+	
 
 	
 	
