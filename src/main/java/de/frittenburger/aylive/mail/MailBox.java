@@ -67,6 +67,7 @@ public class MailBox extends Resource {
 			String prefix = "mail."+protocol;
 			props.setProperty(prefix+".socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 			props.setProperty(prefix+".socketFactory.fallback", "false");
+			props.setProperty(prefix + ".ssl.protocols", "TLSv1.2");
 			session = Session.getInstance(props);
 		}
 		else

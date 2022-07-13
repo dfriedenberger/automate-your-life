@@ -32,7 +32,7 @@ public class TestExtractAttachment {
 		List<Content> contents = wrapper.getContents();
 		assertEquals(2,contents.size());
 		
-		assertEquals("Ihre Aufladung: A&B 20 € Automatische Aufladung. Das A&B Guthaben haben wurde auf die folgende Rufnummer aufgeladen:  +4916212345678\r\n",new String(contents.get(0).getData(),"UTF-8"));
+		assertEquals("Ihre Aufladung: A&B 20 â‚¬ Automatische Aufladung. Das A&B Guthaben haben wurde auf die folgende Rufnummer aufgeladen:  +4916212345678\r\n",new String(contents.get(0).getData(),"UTF-8"));
 		
 	}
 	
@@ -64,7 +64,7 @@ public class TestExtractAttachment {
 		
 		String text = new String(data,content.getEncoding());
 		
-		assertTrue(text.contains("20 €"));
+		assertTrue(text.contains("20 â‚¬"));
 
 		
 		
